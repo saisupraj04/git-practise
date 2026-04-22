@@ -1,3 +1,5 @@
-PRIVATE_KEY = """-----BEGIN PRIVATE KEY-----
-ABCDEF123456789
------END PRIVATE KEY-----"""
+# app.py
+
+AWS_SECRET = "AKIAIOSFODNN7EXAMPLE"
+
+print("Testing GitLeaks detection")

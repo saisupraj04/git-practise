@@ -7,11 +7,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Get your code
+      # Step 1: Checkout code
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      # Step 2: Run GitLeaks (file-based scan - FIXED)
+      # Step 2: Show repo structure (DEBUG)
+      - name: List all files
+        run: |
+          echo "Listing all files in repo:"
+          ls -R
+
+      # Step 3: Show current directory
+      - name: Show working directory
+        run: pwd
+
+      # Step 4: Run GitLeaks on full repo (file-based)
       - name: Run GitLeaks
         uses: gitleaks/gitleaks-action@v2
         with:
