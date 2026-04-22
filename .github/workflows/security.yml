@@ -10,11 +10,5 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Install GitLeaks
-        run: |
-          wget https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-amd64
-          chmod +x gitleaks-linux-amd64
-          sudo mv gitleaks-linux-amd64 /usr/local/bin/gitleaks
-
       - name: Run GitLeaks
-        run: gitleaks detect --exit-code 1
+        uses: gitleaks/gitleaks-action@v2
