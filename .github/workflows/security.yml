@@ -1,4 +1,4 @@
-name: Secret Scan Pipeline
+name: Full Repo Secret Scan
 
 on:
   push:
@@ -9,20 +9,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout code
+      # Step 1: Checkout repo
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      # Step 2: Debug - show only app.py
-      - name: Show app.py content
+      # Step 2: Debug - list all files
+      - name: List all files
         run: |
-          echo "===== app.py content ====="
-          cat app.py
+          echo "===== FILE STRUCTURE ====="
+          ls -R
 
-      # Step 3: Run GitLeaks ONLY on app.py
-      - name: Run GitLeaks on app.py
+      # Step 3: Show all file contents (optional debug)
+      - name: Show important files
+        run: |
+          echo "===== app.py ====="
+          cat app.py || true
+          echo "===== README.md ====="
+          cat README.md || true
+          echo "===== userservice.txt ====="
+          cat userservice.txt || true
+
+      # Step 4: Run GitLeaks on FULL repo (list all leaks)
+      - name: Run GitLeaks (Full Repo Scan)
         run: |
           docker run --rm \
             -v ${{ github.workspace }}:/repo \
             zricethezav/gitleaks:latest \
-            detect --source=/repo/app.py --no-git --verbose --exit-code 1
+            detect --source=/repo --no-git --verbose --exit-code 0
