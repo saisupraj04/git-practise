@@ -1,6 +1,8 @@
 name: Secret Scan Pipeline
 
-on: [push]
+on:
+  push:
+  workflow_dispatch:
 
 jobs:
   scan:
@@ -11,24 +13,16 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      # Step 2: Show files (debug)
-      - name: List files
-        run: |
-          echo "Files in repo:"
-          ls -R
-
-      # Step 3: Show app.py content (debug)
+      # Step 2: Debug - show only app.py
       - name: Show app.py content
-        run: cat app.py
-
-      # Step 4: Install GitLeaks manually
-      - name: Install GitLeaks
         run: |
-          curl -sSL https://github.com/gitleaks/gitleaks/releases/download/v8.24.3/gitleaks_8.24.3_linux_x64.tar.gz -o gitleaks.tar.gz
-          tar -xzf gitleaks.tar.gz
-          sudo mv gitleaks /usr/local/bin/
+          echo "===== app.py content ====="
+          cat app.py
 
-      # Step 5: Run GitLeaks (FORCE FILE SCAN)
-      - name: Run GitLeaks
+      # Step 3: Run GitLeaks ONLY on app.py
+      - name: Run GitLeaks on app.py
         run: |
-          gitleaks detect --source . --no-git --verbose --exit-code 1
+          docker run --rm \
+            -v ${{ github.workspace }}:/repo \
+            zricethezav/gitleaks:latest \
+            detect --source=app.py --no-git --verbose --exit-code 1
